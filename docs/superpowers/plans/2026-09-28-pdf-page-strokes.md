@@ -1,5 +1,7 @@
 # PDF のページを参照で取り込む機能 実装計画
 
+> 2026-09-29 引き継ぎ状況: Task 1〜7 は実装・自動検証済み。Task 8 は個人 fork への公開と GitHub flake の評価まで完了。Task 6 Step 4 の実機操作と液タブ確認は未実施。下のチェックボックスは当初の計画のままで、検証結果と残作業は [利用・確認手順](../../pdf-page-references.md) を参照。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** PDF の全ページを無限キャンバスに格子状に並べても、表示範囲のページだけを必要な解像度で描く要素 `PdfPage` を Rnote に足す。
