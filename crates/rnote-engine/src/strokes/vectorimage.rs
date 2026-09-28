@@ -266,7 +266,12 @@ impl VectorImage {
                         PdfImportPageSpacing::OnePerDocumentPage => format.height(),
                     };
                 }
-                let svg_data = hayro_svg::convert(page, &render_cache, &interpreter_settings, &render_settings);
+                let svg_data = hayro_svg::convert(
+                    page,
+                    &render_cache,
+                    &interpreter_settings,
+                    &render_settings,
+                );
                 let svg = Svg { svg_data, bounds };
 
                 Some(svg)
