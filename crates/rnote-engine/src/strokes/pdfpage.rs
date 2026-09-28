@@ -323,6 +323,26 @@ mod tests {
     }
 
     #[test]
+    fn rotated_page_is_drawn_only_where_it_lies() {
+        let mut page = page("vector.pdf");
+        let center = page.bounds().center();
+        page.rotate(std::f64::consts::FRAC_PI_4, center);
+        let bounds = page.bounds();
+        let square = |min: Vector2| Aabb::new(min, min + Vector2::new(100.0, 100.0));
+        let alphas = |viewport: Aabb| -> Vec<u8> {
+            let image = images(page.gen_images(viewport, 5.0).unwrap()).remove(0);
+            image.data.chunks(4).map(|px| px[3]).collect()
+        };
+        // The corner of the bounds lies outside the page rotated by 45 degrees.
+        assert!(alphas(square(bounds.mins)).iter().all(|&a| a == 0));
+        assert!(
+            alphas(square(center - Vector2::new(50.0, 50.0)))
+                .iter()
+                .all(|&a| a == 255)
+        );
+    }
+
+    #[test]
     fn missing_pdf_renders_placeholder() {
         let mut page = page("vector.pdf");
         page.pdf_path = PathBuf::from("/nonexistent/book.pdf");
