@@ -3,6 +3,7 @@ pub mod animation;
 pub mod config;
 pub mod export;
 pub mod import;
+pub mod import_pdfpages;
 pub mod rendering;
 pub mod snapshot;
 pub mod strokecontent;

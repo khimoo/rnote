@@ -12,6 +12,7 @@ rnote_engine_sources = files(
     'engine/config.rs',
     'engine/export.rs',
     'engine/import.rs',
+    'engine/import_pdfpages.rs',
     'engine/mod.rs',
     'engine/rendering.rs',
     'engine/snapshot.rs',
