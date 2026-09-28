@@ -140,6 +140,7 @@ impl StrokeContent {
             .filter_map(|stroke| match stroke.as_ref() {
                 Stroke::BitmapImage(image) => Some(image.rectangle.bounds()),
                 Stroke::VectorImage(image) => Some(image.rectangle.bounds()),
+                Stroke::PdfPage(page) => Some(page.rectangle.bounds()),
                 _ => None,
             })
             .collect::<Vec<Aabb>>();

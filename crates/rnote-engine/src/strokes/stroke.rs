@@ -2,6 +2,7 @@
 use super::bitmapimage::BitmapImage;
 use super::brushstroke::BrushStroke;
 use super::content::GeneratedContentImages;
+use super::pdfpage::PdfPage;
 use super::shapestroke::ShapeStroke;
 use super::vectorimage::VectorImage;
 use super::{Content, TextStroke};
@@ -37,6 +38,8 @@ pub enum Stroke {
     VectorImage(VectorImage),
     #[serde(rename = "bitmapimage")]
     BitmapImage(BitmapImage),
+    #[serde(rename = "pdfpage")]
+    PdfPage(PdfPage),
 }
 
 impl Content for Stroke {
@@ -47,6 +50,7 @@ impl Content for Stroke {
             Stroke::TextStroke(textstroke) => textstroke.gen_svg(),
             Stroke::VectorImage(vectorimage) => vectorimage.gen_svg(),
             Stroke::BitmapImage(bitmapimage) => bitmapimage.gen_svg(),
+            Stroke::PdfPage(pdfpage) => pdfpage.gen_svg(),
         }
     }
 
@@ -61,6 +65,7 @@ impl Content for Stroke {
             Stroke::TextStroke(textstroke) => textstroke.gen_images(viewport, image_scale),
             Stroke::VectorImage(vectorimage) => vectorimage.gen_images(viewport, image_scale),
             Stroke::BitmapImage(bitmapimage) => bitmapimage.gen_images(viewport, image_scale),
+            Stroke::PdfPage(pdfpage) => pdfpage.gen_images(viewport, image_scale),
         }
     }
 
@@ -75,6 +80,7 @@ impl Content for Stroke {
             Stroke::TextStroke(textstroke) => textstroke.draw_highlight(cx, total_zoom),
             Stroke::VectorImage(vectorimage) => vectorimage.draw_highlight(cx, total_zoom),
             Stroke::BitmapImage(bitmapimage) => bitmapimage.draw_highlight(cx, total_zoom),
+            Stroke::PdfPage(pdfpage) => pdfpage.draw_highlight(cx, total_zoom),
         }
     }
 
@@ -85,6 +91,7 @@ impl Content for Stroke {
             Stroke::TextStroke(textstroke) => textstroke.update_geometry(),
             Stroke::VectorImage(vectorimage) => vectorimage.update_geometry(),
             Stroke::BitmapImage(bitmapimage) => bitmapimage.update_geometry(),
+            Stroke::PdfPage(pdfpage) => pdfpage.update_geometry(),
         }
     }
 }
@@ -97,6 +104,7 @@ impl Drawable for Stroke {
             Stroke::TextStroke(textstroke) => textstroke.draw(cx, image_scale),
             Stroke::VectorImage(vectorimage) => vectorimage.draw(cx, image_scale),
             Stroke::BitmapImage(bitmapimage) => bitmapimage.draw(cx, image_scale),
+            Stroke::PdfPage(pdfpage) => pdfpage.draw(cx, image_scale),
         }
     }
 
@@ -107,6 +115,7 @@ impl Drawable for Stroke {
             Stroke::TextStroke(textstroke) => textstroke.draw_to_cairo(cx, image_scale),
             Stroke::VectorImage(vectorimage) => vectorimage.draw_to_cairo(cx, image_scale),
             Stroke::BitmapImage(bitmapimage) => bitmapimage.draw_to_cairo(cx, image_scale),
+            Stroke::PdfPage(pdfpage) => pdfpage.draw_to_cairo(cx, image_scale),
         }
     }
 }
@@ -119,6 +128,7 @@ impl Shapeable for Stroke {
             Self::TextStroke(textstroke) => textstroke.bounds(),
             Self::VectorImage(vectorimage) => vectorimage.bounds(),
             Self::BitmapImage(bitmapimage) => bitmapimage.bounds(),
+            Self::PdfPage(pdfpage) => pdfpage.bounds(),
         }
     }
 
@@ -129,6 +139,7 @@ impl Shapeable for Stroke {
             Self::TextStroke(textstroke) => textstroke.hitboxes(),
             Self::VectorImage(vectorimage) => vectorimage.hitboxes(),
             Self::BitmapImage(bitmapimage) => bitmapimage.hitboxes(),
+            Self::PdfPage(pdfpage) => pdfpage.hitboxes(),
         }
     }
 
@@ -139,6 +150,7 @@ impl Shapeable for Stroke {
             Self::TextStroke(textstroke) => textstroke.outline_path(),
             Self::VectorImage(vectorimage) => vectorimage.outline_path(),
             Self::BitmapImage(bitmapimage) => bitmapimage.outline_path(),
+            Self::PdfPage(pdfpage) => pdfpage.outline_path(),
         }
     }
 }
@@ -161,6 +173,9 @@ impl Transformable for Stroke {
             Self::BitmapImage(bitmapimage) => {
                 bitmapimage.translate(offset);
             }
+            Self::PdfPage(pdfpage) => {
+                pdfpage.translate(offset);
+            }
         }
     }
 
@@ -180,6 +195,9 @@ impl Transformable for Stroke {
             }
             Self::BitmapImage(bitmapimage) => {
                 bitmapimage.rotate(angle, center);
+            }
+            Self::PdfPage(pdfpage) => {
+                pdfpage.rotate(angle, center);
             }
         }
     }
@@ -201,6 +219,9 @@ impl Transformable for Stroke {
             Self::BitmapImage(bitmapimage) => {
                 bitmapimage.scale(scale);
             }
+            Self::PdfPage(pdfpage) => {
+                pdfpage.scale(scale);
+            }
         }
     }
 }
@@ -215,6 +236,7 @@ impl Stroke {
             Stroke::ShapeStroke(_) => StrokeLayer::UserLayer(0),
             Stroke::TextStroke(_) => StrokeLayer::UserLayer(0),
             Stroke::VectorImage(_) | Stroke::BitmapImage(_) => StrokeLayer::Image,
+            Stroke::PdfPage(_) => StrokeLayer::Document,
         }
     }
 
@@ -261,6 +283,7 @@ impl Stroke {
             }
             Stroke::VectorImage(_) => false,
             Stroke::BitmapImage(_) => false,
+            Stroke::PdfPage(_) => false,
         }
     }
 
@@ -302,6 +325,7 @@ impl Stroke {
             }
             Stroke::VectorImage(_) => false,
             Stroke::BitmapImage(_) => false,
+            Stroke::PdfPage(_) => false,
         }
     }
 
@@ -711,6 +735,8 @@ impl Stroke {
                     },
                 ))
             }
+            // The page stays in the referenced Pdf; Xournal++ gets only the annotations.
+            Stroke::PdfPage(_) => None,
         }
     }
 }

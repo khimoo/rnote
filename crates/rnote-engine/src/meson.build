@@ -67,6 +67,7 @@ rnote_engine_sources = files(
     'strokes/brushstroke.rs',
     'strokes/content.rs',
     'strokes/mod.rs',
+    'strokes/pdfpage.rs',
     'strokes/shapestroke.rs',
     'strokes/stroke.rs',
     'strokes/textstroke.rs',

@@ -2,6 +2,7 @@
 pub mod bitmapimage;
 pub mod brushstroke;
 pub mod content;
+pub mod pdfpage;
 pub mod resize;
 pub mod shapestroke;
 pub mod stroke;
@@ -12,6 +13,7 @@ pub mod vectorimage;
 pub use bitmapimage::BitmapImage;
 pub use brushstroke::BrushStroke;
 pub use content::Content;
+pub use pdfpage::PdfPage;
 pub use resize::Resize;
 pub use shapestroke::ShapeStroke;
 pub use stroke::Stroke;
