@@ -21,6 +21,10 @@ rebase の衝突を小さく保つため、機能は新しいファイルに置�
 `flake.nix` は `~/sagyo/flake_public` から `github:khimoo/rnote` として取り込まれる。
 `packages.<system>.default` の名前や中身を変えるときは、flake_public 側の評価も確かめる。
 
+開発環境は `nix develop` で入る。
+flake は git の管理下のファイルしか見ないので、新しく作った Nix のファイルやソースは `nix develop` や `nix build` の前に `git add` しておく。
+ビルドとテストはデスクトップ（`ssh desktop-ts`）の `/tmp/rnote-work` に作業ツリーを複製して行う（手順は [実装計画](docs/superpowers/plans/2026-09-28-pdf-page-strokes.md) の「作業ツリーの同期とコマンド」）。
+
 ## 設計
 
 PDF のページを参照で取り込む機能の設計は [docs/superpowers/specs/2026-09-28-pdf-page-strokes-design.md](docs/superpowers/specs/2026-09-28-pdf-page-strokes-design.md) にある。
