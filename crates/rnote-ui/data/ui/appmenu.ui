@@ -94,6 +94,10 @@
             <attribute name="label" translatable="yes">_Import File</attribute>
             <attribute name="action">win.import-file</attribute>
           </item>
+          <item>
+            <attribute name="label">Import PDF as Page _References…</attribute>
+            <attribute name="action">win.import-pdf-pages</attribute>
+          </item>
           <submenu>
             <attribute name="label" translatable="yes">_Clipboard</attribute>
             <item>

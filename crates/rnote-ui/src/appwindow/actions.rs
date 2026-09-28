@@ -109,6 +109,8 @@ impl RnAppWindow {
         self.add_action(&action_print_doc);
         let action_import_file = gio::SimpleAction::new("import-file", None);
         self.add_action(&action_import_file);
+        let action_import_pdf_pages = gio::SimpleAction::new("import-pdf-pages", None);
+        self.add_action(&action_import_pdf_pages);
         let action_export_doc = gio::SimpleAction::new("export-doc", None);
         self.add_action(&action_export_doc);
         let action_export_doc_pages = gio::SimpleAction::new("export-doc-pages", None);
@@ -987,6 +989,21 @@ impl RnAppWindow {
                     appwindow,
                     async move {
                         dialogs::import::filedialog_import_file(&appwindow).await;
+                    }
+                ));
+            }
+        ));
+
+        // Import Pdf as page references
+        action_import_pdf_pages.connect_activate(clone!(
+            #[weak(rename_to=appwindow)]
+            self,
+            move |_, _| {
+                glib::spawn_future_local(clone!(
+                    #[weak]
+                    appwindow,
+                    async move {
+                        dialogs::import_pdfpages::import_pdf_pages(&appwindow).await;
                     }
                 ));
             }

@@ -57,6 +57,7 @@ rnote_ui_sources = files(
     'contextmenu.rs',
     'dialogs/export.rs',
     'dialogs/import.rs',
+    'dialogs/import_pdfpages.rs',
     'dialogs/mod.rs',
     'env.rs',
     'filetype.rs',
