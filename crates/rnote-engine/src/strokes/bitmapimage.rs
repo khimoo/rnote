@@ -144,6 +144,7 @@ impl BitmapImage {
                 .map_err(|err| anyhow!("Creating Pdf instance failed, Err: {err:?}"))?
         };
         let interpreter_settings = hayro_interpret::InterpreterSettings::default();
+        let render_cache = hayro::RenderCache::new();
         let pages = pdf.pages();
         let page_range = page_range.unwrap_or(0..pages.len());
         let page_width = if pdf_import_prefs.adjust_document {
@@ -176,14 +177,13 @@ impl BitmapImage {
                 let render_settings = hayro::RenderSettings {
                     x_scale: (pdf_import_prefs.bitmap_scalefactor * page_zoom) as f32,
                     y_scale: (pdf_import_prefs.bitmap_scalefactor * page_zoom) as f32,
-                    width: Some((pdf_import_prefs.bitmap_scalefactor * width).ceil() as u16),
-                    height: Some((pdf_import_prefs.bitmap_scalefactor * height).ceil() as u16),
                     bg_color: vello_cpu::color::AlphaColor::WHITE,
                 };
 
                 // TODO: implement drawing page borders.
                 // Possibly with vello-cpu, since it already is a dependency of hayro
-                let pixmap = hayro::render(page, &interpreter_settings, &render_settings);
+                let pixmap =
+                    hayro::render(page, &render_cache, &interpreter_settings, &render_settings);
                 let png_data = pixmap.into_png()?;
 
                 let image_pos = Vector2::new(x, y);

@@ -223,6 +223,7 @@ impl VectorImage {
                 .map_err(|err| anyhow!("Creating Pdf instance failed, Err: {err:?}"))?
         };
         let interpreter_settings = hayro_interpret::InterpreterSettings::default();
+        let render_cache = hayro_svg::RenderCache::new();
         let render_settings = hayro_svg::SvgRenderSettings {
             bg_color: [255, 255, 255, 255],
         };
@@ -265,7 +266,7 @@ impl VectorImage {
                         PdfImportPageSpacing::OnePerDocumentPage => format.height(),
                     };
                 }
-                let svg_data = hayro_svg::convert(page, &interpreter_settings, &render_settings);
+                let svg_data = hayro_svg::convert(page, &render_cache, &interpreter_settings, &render_settings);
                 let svg = Svg { svg_data, bounds };
 
                 Some(svg)
