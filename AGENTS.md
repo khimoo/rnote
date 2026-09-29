@@ -28,3 +28,4 @@ flake は git の管理下のファイルしか見ないので、新しく作っ
 ## 設計
 
 PDF のページを参照で取り込む機能の設計は [docs/superpowers/specs/2026-09-28-pdf-page-strokes-design.md](docs/superpowers/specs/2026-09-28-pdf-page-strokes-design.md) にある。
+取り込んだページをしおりや手書きのセクションに沿って字下げして並べる設計は [docs/superpowers/specs/2026-09-30-pdf-sections-layout-design.md](docs/superpowers/specs/2026-09-30-pdf-sections-layout-design.md) にある。
