@@ -121,12 +121,18 @@ pub fn parse_sections(
 
 /// The sections text for `entries`, numbered by Pdf page so that it parses with printed page 1
 /// on Pdf page 1.
+/// Control characters in titles become spaces, as GTK rejects text containing a NUL.
 pub fn outline_text(entries: &[OutlineEntry]) -> String {
     let mut text = String::new();
     for entry in entries {
         text.push_str(&"  ".repeat(entry.depth));
         text.push_str(&(entry.page_index + 1).to_string());
-        let title = entry.title.split_whitespace().collect::<Vec<_>>().join(" ");
+        let title = entry
+            .title
+            .split(|c: char| c.is_whitespace() || c.is_control())
+            .filter(|word| !word.is_empty())
+            .collect::<Vec<_>>()
+            .join(" ");
         if !title.is_empty() {
             text.push(' ');
             text.push_str(&title);
@@ -247,6 +253,17 @@ mod tests {
     fn huge_page_numbers_are_out_of_range() {
         let e = parse_sections("99999999999999999999999", 1, 2, 30).unwrap_err();
         assert!(matches!(e.kind, OutOfRange { page_count: 30, .. }));
+    }
+
+    #[test]
+    fn control_characters_in_titles_do_not_reach_the_text() {
+        // GTK drops the whole text when it contains a NUL, which Utf-16 titles often end with.
+        let entries = [OutlineEntry {
+            title: "A\0B\u{1}\0".to_string(),
+            page_index: 0,
+            depth: 0,
+        }];
+        assert_eq!(outline_text(&entries), "1 A B\n");
     }
 
     #[test]

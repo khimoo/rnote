@@ -15,8 +15,9 @@ pub mod sections;
 
 /// Top-left offsets of `sizes`, the Pdf pages `first_page..`, laid out in one run of rows per
 /// section and indented by the section depth in columns. A page belongs to the last section
-/// starting at or before it, except that of several sections starting on it the first one takes
-/// it, so a parent keeps the page it shares with its first child. Pages before all sections run
+/// starting at or before it, except that of several sections starting on it the shallowest one
+/// takes it (the first of equally deep ones), so a chapter keeps its row when it starts on the page
+/// of its first child or of the section before it. Pages before all sections run
 /// at depth 0, so without sections this is a plain grid. Runs wrap after `columns` pages; every
 /// column is as wide as the widest page and every row as tall as its tallest page, with `gap`
 /// between them. `sections` must be sorted by start, as [sections::parse_sections] returns them.
@@ -33,7 +34,8 @@ pub fn section_offsets(
         let started = sections.partition_point(|section| section.start <= page);
         let last = started.checked_sub(1)?;
         if sections[last].start == page {
-            Some(sections.partition_point(|section| section.start < page))
+            let first = sections.partition_point(|section| section.start < page);
+            (first..started).min_by_key(|&i| sections[i].depth)
         } else {
             Some(last)
         }
@@ -214,6 +216,33 @@ mod tests {
         assert_eq!(
             section_offsets(&sizes, 0, &sections, 4, 0.0),
             vec![v(0.0, 0.0), v(1.0, 1.0), v(1.0, 2.0)]
+        );
+    }
+
+    #[test]
+    fn a_chapter_starting_where_a_section_starts_keeps_its_row() {
+        // 1.3, chapter 2 and 2.1 all start on page 4, as in notes that do not break pages.
+        let sizes = [v(1.0, 1.0); 7];
+        let sections = [
+            sec(0, 0),
+            sec(0, 1),
+            sec(2, 1),
+            sec(4, 1),
+            sec(4, 0),
+            sec(4, 1),
+            sec(6, 1),
+        ];
+        assert_eq!(
+            section_offsets(&sizes, 0, &sections, 4, 0.0),
+            vec![
+                v(0.0, 0.0),
+                v(1.0, 1.0),
+                v(1.0, 2.0),
+                v(2.0, 2.0),
+                v(0.0, 3.0),
+                v(1.0, 4.0),
+                v(1.0, 5.0),
+            ]
         );
     }
 
