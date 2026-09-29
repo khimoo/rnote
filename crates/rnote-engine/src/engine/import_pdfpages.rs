@@ -10,6 +10,8 @@ use rnote_compose::shapes::Rectangle;
 use std::ops::Range;
 use std::sync::Arc;
 
+pub mod sections;
+
 /// Top-left offsets of pages laid out in rows of `columns`. Every column is as wide as the
 /// widest page and every row as tall as its tallest page, with `gap` between them.
 pub fn grid_offsets(sizes: &[Vector2], columns: usize, gap: f64) -> Vec<Vector2> {
