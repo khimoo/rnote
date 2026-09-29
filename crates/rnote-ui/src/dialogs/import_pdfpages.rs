@@ -48,6 +48,7 @@ pub(crate) async fn import_pdf_pages(appwindow: &RnAppWindow) {
     let generated = canvas.engine_ref().generate_pdfpage_strokes(
         &source,
         options.pages,
+        &[],
         options.columns,
         options.gap_ratio,
         insert_pos,

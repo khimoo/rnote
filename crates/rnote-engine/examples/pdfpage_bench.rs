@@ -8,7 +8,7 @@ use parry2d_f64::math::Vector2;
 use rnote_compose::shapes::{Rectangle, Shapeable};
 use rnote_engine::document::Format;
 use rnote_engine::engine::import::PdfImportPrefs;
-use rnote_engine::engine::import_pdfpages::grid_offsets;
+use rnote_engine::engine::import_pdfpages::section_offsets;
 use rnote_engine::pdfsource::PdfSource;
 use rnote_engine::strokes::{BitmapImage, Content, PdfPage};
 use std::alloc::{GlobalAlloc, Layout, System};
@@ -68,7 +68,7 @@ fn main() -> anyhow::Result<()> {
     let sizes: Vec<Vector2> = (0..source.page_count())
         .map(|i| source.page_size(i).unwrap() * zoom)
         .collect();
-    let offsets = grid_offsets(&sizes, 8, sizes[0][0] * 0.1);
+    let offsets = section_offsets(&sizes, 0, &[], 8, sizes[0][0] * 0.1);
     let pages: Vec<PdfPage> = sizes
         .iter()
         .zip(&offsets)
