@@ -30,16 +30,23 @@ Xournal++ への書き出しでは PDF のページ参照は省かれる。
 文書のレイアウトを「無限」にし、メニューの
 「Import PDF as Page References…」から PDF を選ぶ。
 ページ範囲、列数、間隔を指定して取り込む。
+しおりのある PDF では、セクションの欄にしおりが入る。
+しおりのない PDF では、目次を見ながら 1 行に 1 セクションずつ、開始ページの印刷番号と見出しを書き、空白 2 つで 1 段字下げする。
+本の 1 ページ目が PDF の何ページ目かを `Book Page 1 Is PDF Page` に、使う階層の数を `Max Depth` に指定する。
 
 まず次の小さな PDF を使う。デスクトップの作業ツリーにも同じパスがある。
 
 - `crates/rnote-engine/tests/fixtures/pdf/vector.pdf`
 - `crates/rnote-engine/tests/fixtures/pdf/scan.pdf`
 - `crates/rnote-engine/tests/fixtures/pdf/mixed.pdf`
+- `crates/rnote-engine/tests/fixtures/pdf/outline.pdf`
 
 確認項目:
 
 - [ ] 格子状に配置され、取り消し1回で取り込み全体を戻せる。
+- [ ] `outline.pdf` を取り込むと、セクションの欄にしおりが入り、章ごとに行が改まり、節が 1 ページ分字下げされる。
+- [ ] セクションの欄の字下げを崩すと、行番号付きのエラーが出て Import を押せなくなり、直すと押せるようになる。
+- [ ] セクションの欄を空にすると、今までどおり格子状に並ぶ。
 - [ ] 縮小して全ページを見渡せる。拡大すると電子版の文字が鮮明になる。
 - [ ] 拡大縮小や移動の最中に、描き直し待ちのページが不自然に消えない。
 - [ ] ページを移動・回転・拡大縮小しても描画位置が合う。
