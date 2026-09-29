@@ -31,6 +31,7 @@ rnote_engine_sources = files(
     'image.rs',
     'lib.rs',
     'pdfsource.rs',
+    'pdfsource/outline.rs',
     'pens/brush.rs',
     'pens/eraser.rs',
     'pens/mod.rs',

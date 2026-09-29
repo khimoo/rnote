@@ -22,7 +22,10 @@ use std::fmt;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, LazyLock, Mutex, Weak};
 
+mod outline;
+
 pub use hayro::kurbo::Affine as PdfAffine;
+pub use outline::OutlineEntry;
 
 /// Longest side of a whole-page image. Above it only the visible region is rendered.
 pub const WHOLE_PAGE_MAX_PIXELS: f64 = 4096.0;
@@ -235,6 +238,17 @@ impl PdfSource {
 
     pub fn page_count(&self) -> usize {
         self.page_sizes.len()
+    }
+
+    /// The outline (bookmarks) in document order. Empty when the Pdf has none or it can not be read.
+    pub fn outline(&self) -> Vec<OutlineEntry> {
+        outline::read(&self.pdf).unwrap_or_else(|e| {
+            tracing::warn!(
+                "Reading the outline of '{}' failed, Err: {e:?}",
+                self.path.display()
+            );
+            Vec::new()
+        })
     }
 
     /// Size of the rendered page in points, with the page rotation applied.
