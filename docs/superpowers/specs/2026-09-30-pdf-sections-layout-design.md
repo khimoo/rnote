@@ -161,7 +161,7 @@ UI の文字列は英語で、翻訳は付けない。
 テスト用の PDF を 2 つ足す。
 
 - `outline.pdf`: Typst で作る。入れ子の見出しを持ち、親と子が同じページから始まる箇所と、3 段目の見出しを含む
-- `outline-edge.pdf`: PDF の文法で直接書いたテキストから、`make.sh` が xref の位置を計算して作る。`/Dests` の辞書で引く名前の行き先、name tree で引く文字列の行き先、`/A` の `/GoTo`、UTF-16BE の見出し、解決できない行き先の項目とその子、自分自身を `/Next` に持つ循環する項目を含む
+- `outline-edge.pdf`: PDF の文法で直接書いたテキストから、`make.sh` から呼ぶ `make-outline-edge.sh` が xref の位置を計算して作る。`/Dests` の辞書で引く名前の行き先、name tree で引く文字列の行き先、`/A` の `/GoTo`、UTF-16BE の見出し、解決できない行き先の項目とその子、自分自身を `/Next` に持つ循環する項目を含む
 
 Typst が出すしおりの行き先が名前か配列かは実装のときに確かめ、`outline.pdf` で確かめられない形を `outline-edge.pdf` で補う。
 
